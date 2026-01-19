@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mantenimiento_hector_maquina,mantenimiento_hector.maquina,model_mantenimiento_hector_maquina,base.group_user,1,1,1,1
+access_mantenimiento_hector_incidencia,mantenimiento_hector.incidencia,model_mantenimiento_hector_incidencia,base.group_user,1,1,1,1
+access_mantenimiento_hector_tecnico,mantenimiento_hector.tecnico,model_mantenimiento_hector_tecnico,base.group_user,1,1,1,1
+access_mantenimiento_hector_orden_mantenimiento,mantenimiento_hector.orden_mantenimiento,model_mantenimiento_hector_orden_mantenimiento,base.group_user,1,1,1,1
+access_mantenimiento_hector_material,mantenimiento_hector.material,model_mantenimiento_hector_material,base.group_user,1,1,1,1

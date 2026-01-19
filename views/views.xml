@@ -1,0 +1,330 @@
+<odoo>
+  <data>
+
+    <!-- VISTAS -->
+
+    <!-- Maquina Views -->
+    <record model="ir.ui.view" id="mantenimiento_hector.maquina_tree">
+      <field name="name">mantenimiento_hector.maquina.tree</field>
+      <field name="model">mantenimiento_hector.maquina</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="nombre"/>
+          <field name="codigo_unico"/>
+          <field name="coste_maquina"/>
+          <field name="activa"/>
+          <field name="total_incidentes"/>
+          <field name="ultima_incidencia"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mantenimiento_hector.maquina_form">
+      <field name="name">mantenimiento_hector.maquina.form</field>
+      <field name="model">mantenimiento_hector.maquina</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+                <group>
+                    <field name="nombre"/>
+                    <field name="codigo_unico"/>
+                    <field name="activa"/>
+                </group>
+                <group>
+                    <field name="fecha_compra"/>
+                    <field name="coste_maquina"/>
+                    <field name="tecnico_habitual_id"/>
+                </group>
+            </group>
+            <group>
+                <field name="descripcion"/>
+            </group>
+            <notebook>
+                <page string="Incidencias">
+                    <field name="incidencias"/>
+                </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Incidencia Views -->
+    <record model="ir.ui.view" id="mantenimiento_hector.incidencia_tree">
+      <field name="name">mantenimiento_hector.incidencia.tree</field>
+      <field name="model">mantenimiento_hector.incidencia</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="nombre"/>
+          <field name="maquina_id"/>
+          <field name="prioridad" widget="badge" decoration-danger="prioridad == 'alta'" decoration-warning="prioridad == 'media'" decoration-success="prioridad == 'baja'"/>
+          <field name="estado" widget="badge" decoration-success="estado == 'completada'" decoration-info="estado == 'en_proceso'"/>
+          <field name="fecha_reporte"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mantenimiento_hector.incidencia_form">
+      <field name="name">mantenimiento_hector.incidencia.form</field>
+      <field name="model">mantenimiento_hector.incidencia</field>
+      <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="estado" widget="statusbar" options="{'clickable': '1'}"/>
+            </header>
+            <sheet>
+                <!-- <div class="alert alert-warning" role="alert" invisible="prioridad != 'alta'">
+                    <strong>Atención:</strong> Esta incidencia es de Prioridad ALTA. Resolver con urgencia.
+                </div> -->
+                <group>
+                    <group>
+                        <field name="nombre"/>
+                        <field name="maquina_id"/>
+                        <field name="prioridad"/>
+                    </group>
+                    <group>
+                        <field name="fecha_reporte"/>
+                        <field name="fecha_resolucion"/>
+                        <field name="horas_duracion"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="descripcion"/>
+                    <field name="orden_mantenimiento_id"/>
+                </group>
+            </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mantenimiento_hector.incidencia_kanban">
+        <field name="name">mantenimiento_hector.incidencia.kanban</field>
+        <field name="model">mantenimiento_hector.incidencia</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado">
+                <field name="nombre"/>
+                <field name="prioridad"/>
+                <field name="estado"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_card_header mb-2">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="nombre"/>
+                                    </strong>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span class="text-muted"><field name="maquina_id"/></span>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <field name="prioridad" widget="label" decoration-danger="prioridad == 'alta'" decoration-warning="prioridad == 'media'" decoration-success="prioridad == 'baja'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Tecnico Views -->
+    <record model="ir.ui.view" id="mantenimiento_hector.tecnico_tree">
+      <field name="name">mantenimiento_hector.tecnico.tree</field>
+      <field name="model">mantenimiento_hector.tecnico</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="nombre"/>
+          <field name="telefono"/>
+          <field name="email"/>
+          <field name="nivel_practica"/>
+          <field name="activo"/>
+          <field name="total_ordenes"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mantenimiento_hector.tecnico_form">
+      <field name="name">mantenimiento_hector.tecnico.form</field>
+      <field name="model">mantenimiento_hector.tecnico</field>
+      <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="nombre"/>
+                        <field name="telefono"/>
+                        <field name="email"/>
+                    </group>
+                    <group>
+                        <field name="nivel_practica"/>
+                        <field name="activo"/>
+                        <field name="total_ordenes"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Ordenes Asignadas">
+                        <field name="ordenes_id"/>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Orden Mantenimiento Views -->
+    <record model="ir.ui.view" id="mantenimiento_hector.orden_tree">
+      <field name="name">mantenimiento_hector.orden.tree</field>
+      <field name="model">mantenimiento_hector.orden_mantenimiento</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="nombre"/>
+          <field name="incidencia_id"/>
+          <field name="fecha_inicio"/>
+          <field name="fecha_fin"/>
+          <field name="duracion"/>
+          <field name="estado" widget="badge" decoration-success="estado == 'completado'" decoration-info="estado == 'en_proceso'"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mantenimiento_hector.orden_form">
+      <field name="name">mantenimiento_hector.orden.form</field>
+      <field name="model">mantenimiento_hector.orden_mantenimiento</field>
+      <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="estado" widget="statusbar" options="{'clickable': '1'}"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="nombre"/>
+                        <field name="incidencia_id"/>
+                    </group>
+                    <group>
+                        <field name="fecha_inicio"/>
+                        <field name="fecha_fin"/>
+                        <field name="duracion"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Técnicos">
+                        <field name="tecnicos_id"/>
+                    </page>
+                    <page string="Materiales">
+                        <field name="materiales_id"/>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Material Views -->
+    <record model="ir.ui.view" id="mantenimiento_hector.material_tree">
+      <field name="name">mantenimiento_hector.material.tree</field>
+      <field name="model">mantenimiento_hector.material</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="nombre"/>
+          <field name="cantidad"/>
+          <field name="precio_unidad"/>
+          <field name="total"/>
+          <field name="orden_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mantenimiento_hector.material_form">
+      <field name="name">mantenimiento_hector.material.form</field>
+      <field name="model">mantenimiento_hector.material</field>
+      <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="nombre"/>
+                        <field name="cantidad"/>
+                    </group>
+                    <group>
+                        <field name="precio_unidad"/>
+                        <field name="total"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="orden_id"/>
+                </group>
+            </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- ACCIONES -->
+
+    <!-- Maquina Action -->
+    <record model="ir.actions.act_window" id="mantenimiento_hector.action_maquina_window">
+      <field name="name">Maquinas</field>
+      <field name="res_model">mantenimiento_hector.maquina</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Incidencia Action -->
+    <record model="ir.actions.act_window" id="mantenimiento_hector.action_incidencia_window">
+        <field name="name">Incidencias</field>
+        <field name="res_model">mantenimiento_hector.incidencia</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- Tecnico Action -->
+    <record model="ir.actions.act_window" id="mantenimiento_hector.action_tecnico_window">
+        <field name="name">Técnicos</field>
+        <field name="res_model">mantenimiento_hector.tecnico</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Orden de Mantenimiento Action -->
+    <record model="ir.actions.act_window" id="mantenimiento_hector.action_orden_window">
+        <field name="name">Ordenes de Mantenimiento</field>
+        <field name="res_model">mantenimiento_hector.orden_mantenimiento</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Material Action -->
+    <record model="ir.actions.act_window" id="mantenimiento_hector.action_material_window">
+        <field name="name">Materiales</field>
+        <field name="res_model">mantenimiento_hector.material</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+
+    <!-- MENUS -->
+
+    <!-- Top menu item -->
+    <menuitem name="Mantenimiento Hector" id="mantenimiento_hector.menu_root"/>
+
+    <!-- menu categories -->
+    <menuitem name="Maquinas" id="mantenimiento_hector.menu_maquina" parent="mantenimiento_hector.menu_root" action="mantenimiento_hector.action_maquina_window"/>
+    <menuitem name="Incidencias" id="mantenimiento_hector.menu_incidencia" parent="mantenimiento_hector.menu_root" action="mantenimiento_hector.action_incidencia_window"/>
+    <menuitem name="Ordenes" id="mantenimiento_hector.menu_orden" parent="mantenimiento_hector.menu_root" action="mantenimiento_hector.action_orden_window"/>
+    <menuitem name="Técnicos" id="mantenimiento_hector.menu_tecnico" parent="mantenimiento_hector.menu_root" action="mantenimiento_hector.action_tecnico_window"/>
+    <menuitem name="Materiales" id="mantenimiento_hector.menu_material" parent="mantenimiento_hector.menu_root" action="mantenimiento_hector.action_material_window"/>
+
+    <!-- HERENCIA - Temporarily disabled
+    <record model="ir.ui.view" id="view_partner_form_inherit_mantenimiento">
+        <field name="name">res.partner.form.inherit.mantenimiento</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="es_tecnico_mantenimiento"/>
+            </field>
+        </field>
+    </record>
+    -->
+
+  </data>
+</odoo>
